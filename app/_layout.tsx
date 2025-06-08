@@ -1,3 +1,4 @@
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -67,7 +68,21 @@ export default function RootLayout() {
           fontSize: DesignTokens.typography.fontSize.lg,
         },
       }}>
+        {/* Landing Screen - Entry Point */}
+        <Stack.Screen name="landing" options={{ headerShown: false }} />
+        
+        {/* Authentication Group */}
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        
+        {/* Onboarding Group */}
+        <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+        
+        {/* Main App Group - Protected Routes */}
+        <Stack.Screen name="(main)" options={{ headerShown: false }} />
+        
+        {/* Legacy tabs (keeping for now during migration) */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
