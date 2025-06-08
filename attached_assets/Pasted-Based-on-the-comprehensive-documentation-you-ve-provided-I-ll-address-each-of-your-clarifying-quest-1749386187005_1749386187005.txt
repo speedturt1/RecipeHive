@@ -1,0 +1,141 @@
+Based on the comprehensive documentation you've provided, I'll address each of your clarifying questions with recommendations that align with your freemium business model and conversion optimization goals:
+
+## 1. Content Moderation Specifics
+
+**Moderation Thresholds**: **No difference between free and premium users** for content moderation. Both tiers should have identical content quality standards to maintain platform integrity. However, premium users could receive priority in the appeal process (faster human review).
+
+**Google Cloud Vision Fallback**: 
+1. **Primary fallback**: AWS Rekognition with same confidence thresholds
+2. **Secondary fallback**: Temporary queue for manual review if both APIs fail
+3. **Emergency mode**: Allow uploads but flag all content for batch review within 24 hours
+
+**Content Appeals Process**:
+```
+User Appeal → Automated Re-scan (different AI model) → Human Review Queue
+```
+- Automated re-review using AWS Rekognition if original was Google Vision
+- If confidence scores differ significantly (>30 points), auto-approve
+- Otherwise, queue for human review with original context
+
+## 2. Freemium Conversion Strategy
+
+**Upgrade Prompt Timing**: **Immediate but educational approach**
+- Show upgrade prompt immediately when limit is hit
+- Include educational content explaining premium value
+- Offer "Learn More" option with detailed feature comparison
+- Allow 2-3 dismissals before showing persistent reminder
+
+**A/B Testing for Paywall**: **Essential for optimization**
+```javascript
+// Example A/B test structure
+const paywallVariants = {
+  A: { emphasis: 'features', trialLength: '14-day' },
+  B: { emphasis: 'savings', trialLength: '14-day' },
+  C: { emphasis: 'social', trialLength: '7-day' }
+};
+```
+
+**Premium User Badges**: **Yes, but subtle**
+- Small "Pro" badge next to usernames in recipe comments
+- "Premium Recipe" indicator for recipes with advanced features (OCR imports)
+- Premium user recipe highlights in search results (not overly prominent)
+
+## 3. Media Management Details
+
+**10-Image Limit**: **Apply to both tiers equally** 
+- This maintains content quality while preventing spam
+- Premium users get unlimited collections, not unlimited images per recipe
+- Focus premium value on import capabilities and social features
+
+**Video Thumbnails**: **Auto-generated with manual override option**
+- Auto-generate thumbnail at 25% video duration
+- Allow manual selection from 3-4 auto-generated options
+- Premium users get advanced thumbnail editing tools
+
+**Progressive Image Loading**: **Yes, essential for mobile users**
+```javascript
+// Loading strategy
+1. Show 150x150 thumbnail immediately
+2. Load 600x600 on viewport entry
+3. Full resolution on user interaction
+```
+
+## 4. Technical Implementation Preferences
+
+**Offline Functionality**: **Tiered caching strategy**
+- **Free users**: Recipe metadata + primary image only
+- **Premium users**: Full recipe data + all images + videos (with size limits)
+- **Smart sync**: Changed content only, not full re-download
+
+**Real-time vs Periodic Sync**: **Hybrid approach**
+- **Real-time**: Subscription status, content moderation results
+- **Periodic**: Media assets, recipe collections (every 30 seconds active, 5 minutes background)
+- **Manual sync**: User-triggered for immediate needs
+
+**Image Compression**: **Client-side preprocessing + server-side optimization**
+```javascript
+// Client-side: Quick resize for UI responsiveness
+// Server-side: Professional compression for storage optimization
+// Benefits: Faster upload perception + optimized storage costs
+```
+
+## 5. Development Priorities
+
+Based on your freemium model's success factors, I recommend this **modified phased approach**:
+
+### **Phase 1A: Freemium Foundation + Core Media (Months 1-2)**
+```
+Week 1-2: Authentication + Subscription tiers
+Week 3-4: Basic media upload pipeline
+Week 5-6: Recipe creation with image requirements
+Week 7-8: Tier-based limitations + upgrade prompts
+```
+
+**Rationale**: Media is core to your value proposition. Users need to see recipe quality immediately to understand upgrade value.
+
+### **Phase 1B: Platform Priority - Mobile First**
+Start with **React Native mobile** for these reasons:
+- Recipe photography is primarily mobile behavior
+- App store reviews crucial for organic growth
+- Push notifications essential for conversion optimization
+- Mobile users show higher conversion rates in freemium apps
+
+**Web platform**: Launch simultaneously using Expo web, but optimize mobile experience first.
+
+### **Recommended Sprint Structure**:
+
+**Sprint 1-2: Core Infrastructure**
+- [ ] Subscription management with Stripe
+- [ ] Basic authentication and user tiers
+- [ ] PostgreSQL schema with media support
+- [ ] Cloudflare R2 CDN setup
+
+**Sprint 3-4: Media Pipeline** 
+- [ ] Image upload with compression
+- [ ] Content moderation integration
+- [ ] Basic recipe creation with mandatory images
+- [ ] Free tier limitations (10 saves, 1 collection)
+
+**Sprint 5-6: Conversion Optimization**
+- [ ] Upgrade prompts and paywall modals
+- [ ] Trial management and tracking
+- [ ] Basic analytics and A/B testing framework
+- [ ] Ad integration for free tier
+
+**Sprint 7-8: Social Features**
+- [ ] Recipe browsing with visual emphasis
+- [ ] Basic social interactions (saves, ratings)
+- [ ] Premium user differentiation
+- [ ] Advanced search (premium only)
+
+This approach ensures you have a **compelling freemium experience** with clear upgrade incentives by Month 2, allowing for immediate user acquisition and conversion testing.
+
+## Key Success Metrics to Track Early:
+
+1. **Media Upload Success Rate**: >98% (affects core value proposition)
+2. **Free-to-Premium Conversion**: Track daily during development
+3. **Trial-to-Paid Conversion**: Optimize paywall immediately
+4. **Content Moderation Accuracy**: Minimize false positives to avoid user frustration
+5. **Image Loading Performance**: <2 seconds globally for user retention
+
+Would you like me to elaborate on any of these recommendations or dive deeper into specific implementation details for any particular area?

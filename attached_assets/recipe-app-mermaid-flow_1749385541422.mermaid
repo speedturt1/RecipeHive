@@ -1,0 +1,139 @@
+flowchart TD
+    %% === AUTHENTICATION LAYER ===
+    subgraph AuthFlow ["🔐 Authentication & Onboarding"]
+        Landing[🏠 Landing Screen<br/>Freemium Value Prop<br/>Browse Recipes FREE]
+        Register[📝 Register<br/>14-Day Trial<br/>No Credit Card]
+        Login[🔑 Login<br/>Tier Detection]
+    end
+    
+    %% === MAIN APPLICATION LAYER ===
+    subgraph MainApp ["🏡 Main Application"]
+        Home[🏡 Home Dashboard<br/>Personalized Feed<br/>Tier-Aware UI<br/>Usage Tracking]
+    end
+    
+    %% === CORE FEATURES LAYER ===
+    subgraph CoreFeatures ["📱 Core Features (All Users)"]
+        direction LR
+        Browser[🔍 Recipe Browser<br/>All Public Recipes<br/>+ Banner Ads]
+        Detail[📋 Recipe Detail<br/>Image Gallery<br/>Video Player]
+        Saves[💾 My Saves<br/>10/10 Used<br/>Progress Bar]
+        Collections[📁 Collections<br/>1 Collection<br/>Getting Cluttered]
+        Shopping[🛒 Shopping Lists<br/>1 List Free<br/>8 Categories]
+    end
+    
+    %% === RECIPE CREATION LAYER ===
+    subgraph RecipeCreation ["➕ Recipe Creation Flow"]
+        direction TB
+        Create[➕ Create Recipe<br/>Choose Method]
+        Manual[✍️ Manual Entry<br/>All Users]
+        OCR[📷 OCR Import<br/>Trial/Premium]
+        WebScrape[🌐 Web Scraping<br/>Premium Only]
+        
+        subgraph MediaFlow ["🖼️ Media Processing"]
+            MediaUpload[📸 Media Upload<br/>Images + Videos<br/>AI Moderation]
+            ImageEdit[✂️ Image Editor<br/>Crop & Rotate]
+            ContentWarning[⚠️ Content Warning<br/>AI Rejection]
+            Appeal[📝 Appeal Process<br/>Strike System]
+        end
+    end
+    
+    %% === PREMIUM FEATURES LAYER ===
+    subgraph PremiumFeatures ["⭐ Premium Features"]
+        direction LR
+        AdvancedSearch[🔎 Advanced Search<br/>Filters & Dietary]
+        Social[👥 Social Features<br/>Follow & Share]
+        Offline[📱 Offline Access<br/>Cached Recipes]
+        UnlimitedLists[🛒 Unlimited Lists<br/>Smart Organization]
+    end
+    
+    %% === SUBSCRIPTION LAYER ===
+    subgraph SubscriptionFlow ["💳 Subscription & Monetization"]
+        direction LR
+        Paywall[💳 Paywall Modal<br/>Limit Reached<br/>$4.99/mo or $39.99/yr]
+        Subscription[💰 Payment<br/>Stripe Integration]
+        Success[✅ Premium Unlocked<br/>Feature Tour]
+        
+        subgraph Ads ["📢 Ad Revenue (Free Users)"]
+            BannerAds[📢 Banner Ads]
+            InterstitialAds[📺 Interstitial Ads]
+        end
+    end
+    
+    %% === ADMIN LAYER ===
+    subgraph AdminArea ["👨‍💼 Admin Dashboard"]
+        direction LR
+        AdminDash[📊 Analytics Dashboard<br/>Conversion Metrics]
+        UserMgmt[👤 User Management<br/>Subscriptions]
+        ModerationQueue[🔍 Content Moderation<br/>Appeals Queue]
+    end
+    
+    %% === MAIN FLOW CONNECTIONS ===
+    Landing --> Register
+    Landing --> Login
+    Register --> Home
+    Login --> Home
+    
+    %% Home to Core Features
+    Home --> Browser
+    Home --> Saves  
+    Home --> Collections
+    Home --> Shopping
+    Home --> Create
+    
+    %% Recipe Browsing Flow
+    Browser --> Detail
+    Detail --> Saves
+    
+    %% Recipe Creation Flow
+    Create --> Manual
+    Create --> OCR
+    Create --> WebScrape
+    Manual --> MediaUpload
+    OCR --> MediaUpload
+    WebScrape --> MediaUpload
+    MediaUpload --> ImageEdit
+    MediaUpload --> ContentWarning
+    ContentWarning --> Appeal
+    
+    %% Paywall Triggers (Dashed lines for limit hits)
+    Saves -.->|Limit Hit| Paywall
+    Collections -.->|Limit Hit| Paywall
+    OCR -.->|Premium Required| Paywall
+    WebScrape -.->|Premium Required| Paywall
+    Shopping -.->|Multiple Lists| Paywall
+    
+    %% Premium Access (After subscription)
+    Success --> AdvancedSearch
+    Success --> Social
+    Success --> Offline
+    Success --> UnlimitedLists
+    
+    %% Subscription Flow
+    Paywall --> Subscription
+    Subscription --> Success
+    
+    %% Ad Integration (Free users only)
+    Browser -.->|Free Users| BannerAds
+    Browser -.->|Free Users| InterstitialAds
+    
+    %% Admin Access (Separate flow)
+    Home -.->|Admin Only| AdminDash
+    AdminDash --> UserMgmt
+    AdminDash --> ModerationQueue
+    
+    %% === STYLING ===
+    classDef authClass fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef mainClass fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    classDef freeClass fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef premiumClass fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    classDef paywallClass fill:#ffebee,stroke:#d32f2f,stroke-width:3px
+    classDef modalClass fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef adminClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class Landing,Register,Login authClass
+    class Home mainClass
+    class Browser,Detail,Saves,Collections,Shopping,Create,Manual,MediaUpload,ImageEdit freeClass
+    class OCR,WebScrape,AdvancedSearch,Social,Offline,UnlimitedLists premiumClass
+    class Paywall,Subscription,Success paywallClass
+    class ContentWarning,Appeal,BannerAds,InterstitialAds modalClass
+    class AdminDash,UserMgmt,ModerationQueue adminClass
