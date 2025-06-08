@@ -1,3 +1,4 @@
+
 import { SubscriptionTier } from '../constants/DesignTokens';
 
 export interface User {
@@ -8,22 +9,22 @@ export interface User {
   tier: SubscriptionTier;
   createdAt: Date;
   updatedAt: Date;
-
+  
   // Trial tracking
   trialStartedAt?: Date;
   trialEndsAt?: Date;
   isTrialActive: boolean;
-
+  
   // Subscription info
   subscriptionId?: string;
   subscriptionStatus?: 'active' | 'cancelled' | 'past_due' | 'incomplete';
   subscriptionCurrentPeriodEnd?: Date;
-
+  
   // Usage tracking
   recipesCount: number;
   collectionsCount: number;
   contentWarnings: number;
-
+  
   // Preferences
   preferences: UserPreferences;
 }
@@ -62,19 +63,4 @@ export interface AdConfig {
   adFrequency: number;
   lastAdShown?: Date;
   interstitialCooldown: number;
-}
-
-export interface UserProfile {
-  id: string;
-  email: string;
-  name: string;
-  subscriptionTier: 'free' | 'trial' | 'premium';
-  subscriptionId?: string;
-  trialStartDate?: string;
-  trialEndDate?: string;
-  role: 'user' | 'admin';
-  hasCompletedOnboarding: boolean;
-  savedRecipes: string[];
-  createdAt: string;
-  updatedAt: string;
 }
