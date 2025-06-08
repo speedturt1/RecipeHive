@@ -19,9 +19,9 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, tier }) => {
   const getTierBadge = (tierType: string) => {
-    if (tierType === "All Users") {
+    if (tierType === "Free + Premium") {
       return <TierBadge tier="free" />;
-    } else if (tierType.includes("Premium")) {
+    } else if (tierType === "Premium Only") {
       return <TierBadge tier="premium" />;
     }
     return null;
@@ -57,33 +57,33 @@ export default function RecipeHiveHomepage() {
   const keyFeatures = [
     {
       icon: "🖼️",
-      title: "My Recipe Collection",
-      description: "Every recipe features beautiful images with optional cooking videos. Save unlimited recipes and browse with confidence knowing exactly what each dish should look like.",
-      tier: "All Users"
+      title: "Browse & Save Recipes",
+      description: "Browse unlimited public recipes with beautiful images. Free users can save up to 10 recipes to get started with their collection.",
+      tier: "Free + Premium"
     },
     {
       icon: "📸",
       title: "Smart Recipe Import",
       description: "Scan handwritten recipes with OCR technology or import directly from any cooking website. Transform any recipe source into your organized digital collection.",
-      tier: "Premium"
+      tier: "Premium Only"
+    },
+    {
+      icon: "📚",
+      title: "Recipe Collections",
+      description: "Organize your saved recipes into unlimited custom collections. Create themed collections like 'Quick Weeknight Dinners' or 'Holiday Favorites'.",
+      tier: "Premium Only"
     },
     {
       icon: "🛒",
       title: "Intelligent Shopping Lists",
       description: "Generate organized grocery lists automatically from your recipes. Smart categorization by store aisle makes shopping faster and more efficient.",
-      tier: "Premium"
-    },
-    {
-      icon: "🔍",
-      title: "Advanced Search & Discovery",
-      description: "Find recipes instantly with powerful filters for ingredients, dietary needs, cuisine type, and cooking time. Premium users get AI-powered recommendations.",
-      tier: "Premium Search"
+      tier: "Premium Only"
     },
     {
       icon: "👥",
       title: "Social Cooking Community",
       description: "Follow favorite food creators, share your own recipes with photos and videos, and get inspired by a community of passionate home cooks.",
-      tier: "Premium Social"
+      tier: "Premium Only"
     }
   ];
 
@@ -91,13 +91,13 @@ export default function RecipeHiveHomepage() {
     { name: "Browse Public Recipes", free: true, premium: true },
     { name: "Basic Text Search", free: true, premium: true },
     { name: "Save Recipes", free: "Up to 10", premium: "Unlimited" },
-    { name: "Recipe Collections", free: "1 Collection", premium: "Unlimited" },
-    { name: "Shopping Lists", free: "1 Active List", premium: "Unlimited" },
+    { name: "Recipe Collections", free: false, premium: "Unlimited" },
+    { name: "Shopping Lists", free: false, premium: "Unlimited" },
+    { name: "Social Features", free: false, premium: "Full Access" },
     { name: "Ad-Free Experience", free: false, premium: true },
     { name: "OCR Recipe Import", free: false, premium: true },
     { name: "Web Recipe Import", free: false, premium: true },
     { name: "Advanced Search Filters", free: false, premium: true },
-    { name: "Social Features", free: "View Only", premium: "Full Access" },
     { name: "Offline Access", free: false, premium: true },
     { name: "Priority Support", free: false, premium: true },
   ];

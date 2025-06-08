@@ -19,11 +19,15 @@ export class SubscriptionService {
       case SubscriptionTiers.FREE:
         return {
           maxRecipes: FeatureFlags.FREE_RECIPE_LIMIT,
-          maxCollections: FeatureFlags.FREE_COLLECTION_LIMIT,
+          maxCollections: 0, // No collections for free users
+          maxShoppingLists: 0, // No shopping lists for free users
           hasOCR: false,
           hasAdvancedSearch: false,
           hasAdFreeExperience: false,
           hasPrioritySupport: false,
+          hasSocialFeatures: false, // No social features for free users
+          hasCollections: false,
+          hasShoppingLists: false,
         };
       
       case SubscriptionTiers.TRIAL:
@@ -31,10 +35,14 @@ export class SubscriptionService {
         return {
           maxRecipes: null, // unlimited
           maxCollections: null, // unlimited
+          maxShoppingLists: null, // unlimited
           hasOCR: true,
           hasAdvancedSearch: true,
           hasAdFreeExperience: true,
           hasPrioritySupport: true,
+          hasSocialFeatures: true,
+          hasCollections: true,
+          hasShoppingLists: true,
         };
       
       default:
@@ -51,7 +59,16 @@ export class SubscriptionService {
         return limits.maxRecipes === null || user.recipesCount < limits.maxRecipes;
       
       case 'create_collection':
-        return limits.maxCollections === null || user.collectionsCount < limits.maxCollections;
+        return limits.hasCollections && (limits.maxCollections === null || user.collectionsCount < limits.maxCollections);
+      
+      case 'create_shopping_list':
+        return limits.hasShoppingLists;
+      
+      case 'use_social_features':
+      case 'follow_user':
+      case 'comment_recipe':
+      case 'share_recipe':
+        return limits.hasSocialFeatures;
       
       case 'use_ocr':
         return limits.hasOCR;

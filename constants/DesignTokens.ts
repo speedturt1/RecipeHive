@@ -195,13 +195,14 @@ export const SubscriptionTiers = {
 export const FeatureFlags = {
   // Free tier limits
   FREE_RECIPE_LIMIT: 10,
-  FREE_COLLECTION_LIMIT: 1,
   
   // Premium features
   UNLIMITED_SAVES: 'unlimited_saves',
   OCR_PROCESSING: 'ocr_processing',
   ADVANCED_SEARCH: 'advanced_search',
-  MULTIPLE_COLLECTIONS: 'multiple_collections',
+  COLLECTIONS: 'collections',
+  SHOPPING_LISTS: 'shopping_lists',
+  SOCIAL_FEATURES: 'social_features',
   AD_FREE_EXPERIENCE: 'ad_free_experience',
   
   // Trial settings

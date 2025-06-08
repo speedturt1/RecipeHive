@@ -48,10 +48,14 @@ export interface UserPreferences {
 export interface SubscriptionLimits {
   maxRecipes: number | null; // null = unlimited
   maxCollections: number | null;
+  maxShoppingLists: number | null;
   hasOCR: boolean;
   hasAdvancedSearch: boolean;
   hasAdFreeExperience: boolean;
   hasPrioritySupport: boolean;
+  hasSocialFeatures: boolean;
+  hasCollections: boolean;
+  hasShoppingLists: boolean;
 }
 
 export interface AdConfig {
