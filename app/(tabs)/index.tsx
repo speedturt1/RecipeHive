@@ -9,39 +9,86 @@ import { TierBadge } from '@/components/ui/TierBadge';
 import { DesignTokens, FeatureFlags, PricingConfig } from '@/constants/DesignTokens';
 import { SubscriptionService } from '@/services/SubscriptionService';
 
-interface FeatureComparisonProps {
-  feature: string;
-  free: boolean;
-  premium: boolean;
+interface FeatureCardProps {
+  icon: string;
+  title: string;
   description: string;
+  tier: string;
 }
 
-const FeatureComparison: React.FC<FeatureComparisonProps> = ({ feature, free, premium, description }) => (
-  <View style={styles.featureRow}>
-    <View style={styles.featureInfo}>
-      <BodyBase style={styles.featureName}>{feature}</BodyBase>
-      <BodyBase style={styles.featureDescription} color={500}>{description}</BodyBase>
-    </View>
-    <View style={styles.featureChecks}>
-      <View style={[styles.checkContainer, !free && styles.checkDisabled]}>
-        <BodyBase color={free ? 600 : 400}>{free ? '✓' : '–'}</BodyBase>
-      </View>
-      <View style={[styles.checkContainer, styles.checkPremium]}>
-        <BodyBase style={{ color: DesignTokens.colors.premium.primary }}>✓</BodyBase>
-      </View>
-    </View>
-  </View>
-);
+const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, tier }) => {
+  const getTierBadge = (tierType: string) => {
+    if (tierType === "All Users") {
+      return <TierBadge tier="free" />;
+    } else if (tierType.includes("Premium")) {
+      return <TierBadge tier="premium" />;
+    }
+    return null;
+  };
 
-export default function LandingScreen() {
+  return (
+    <Card style={styles.featureCard}>
+      <View style={styles.featureHeader}>
+        <View style={styles.iconContainer}>
+          <BodyLG style={styles.featureIcon}>{icon}</BodyLG>
+        </View>
+        {getTierBadge(tier)}
+      </View>
+      <HeadingLG style={styles.featureTitle}>{title}</HeadingLG>
+      <BodyBase color={600} style={styles.featureDescription}>
+        {description}
+      </BodyBase>
+    </Card>
+  );
+};
+
+export default function RecipeHiveHomepage() {
   const [isTrialStarted, setIsTrialStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const subscriptionService = SubscriptionService.getInstance();
 
+  const productSummary = {
+    title: "Your Recipe Collection, Perfected",
+    description: "Transform scattered recipe links, photos, and handwritten cards into one beautifully organized digital cookbook with stunning visuals.",
+    subtitle: "Plus, generate smart shopping lists that organize ingredients by store aisle, making your grocery trips faster and more efficient."
+  };
+
+  const keyFeatures = [
+    {
+      icon: "🖼️",
+      title: "My Recipe Collection",
+      description: "Every recipe features beautiful images with optional cooking videos. Save unlimited recipes and browse with confidence knowing exactly what each dish should look like.",
+      tier: "All Users"
+    },
+    {
+      icon: "📸",
+      title: "Smart Recipe Import",
+      description: "Scan handwritten recipes with OCR technology or import directly from any cooking website. Transform any recipe source into your organized digital collection.",
+      tier: "Premium"
+    },
+    {
+      icon: "🛒",
+      title: "Intelligent Shopping Lists",
+      description: "Generate organized grocery lists automatically from your recipes. Smart categorization by store aisle makes shopping faster and more efficient.",
+      tier: "Premium"
+    },
+    {
+      icon: "🔍",
+      title: "Advanced Search & Discovery",
+      description: "Find recipes instantly with powerful filters for ingredients, dietary needs, cuisine type, and cooking time. Premium users get AI-powered recommendations.",
+      tier: "Premium Search"
+    },
+    {
+      icon: "👥",
+      title: "Social Cooking Community",
+      description: "Follow favorite food creators, share your own recipes with photos and videos, and get inspired by a community of passionate home cooks.",
+      tier: "Premium Social"
+    }
+  ];
+
   const handleStartTrial = async () => {
     setIsLoading(true);
     try {
-      // Mock trial start
       await subscriptionService.mockSubscription('trial');
       setIsTrialStarted(true);
       // TODO: Navigate to main app or show success
@@ -54,7 +101,6 @@ export default function LandingScreen() {
 
   const handleGetStartedFree = async () => {
     try {
-      // Mock free tier
       await subscriptionService.mockSubscription('free');
       // TODO: Navigate to main app
     } catch (error) {
@@ -72,134 +118,94 @@ export default function LandingScreen() {
         {/* Hero Section */}
         <View style={styles.hero}>
           <HeadingXL style={styles.heroTitle}>
-            Organize Your{'\n'}Recipes Like a Pro
+            {productSummary.title}
           </HeadingXL>
-          <BodyLG style={styles.heroSubtitle}>
-            Discover, save, and share beautiful recipes with mandatory high-quality images. 
-            Intelligent grocery lists and seamless recipe management.
+          <BodyLG style={styles.heroDescription}>
+            {productSummary.description}
           </BodyLG>
-        </View>
+          <BodyBase style={styles.heroSubtitle} color={500}>
+            {productSummary.subtitle}
+          </BodyBase>
 
-        {/* Value Proposition Cards */}
-        <View style={styles.valueProps}>
-          <Card style={styles.valueCard}>
-            <HeadingLG style={styles.valueTitle}>📸 Media-First Experience</HeadingLG>
-            <BodyBase color={600}>
-              Every recipe includes beautiful, high-quality images. Optional cooking videos for premium users.
-            </BodyBase>
-          </Card>
-
-          <Card style={styles.valueCard}>
-            <HeadingLG style={styles.valueTitle}>🛒 Smart Shopping Lists</HeadingLG>
-            <BodyBase color={600}>
-              Auto-generated grocery lists organized by store sections. Never forget an ingredient again.
-            </BodyBase>
-          </Card>
-
-          <Card style={styles.valueCard}>
-            <HeadingLG style={styles.valueTitle}>🔍 Advanced Recipe Discovery</HeadingLG>
-            <BodyBase color={600}>
-              OCR technology extracts recipes from images. Search by ingredients, dietary preferences, and more.
-            </BodyBase>
-          </Card>
-        </View>
-
-        {/* Pricing Section */}
-        <View style={styles.pricingSection}>
-          <HeadingLG style={styles.sectionTitle}>Choose Your Plan</HeadingLG>
-          
-          {/* Free vs Premium Header */}
-          <View style={styles.tierHeader}>
-            <View style={styles.tierColumn}>
-              <TierBadge tier="free" />
-              <BodyBase style={styles.tierPrice}>Free Forever</BodyBase>
-            </View>
-            <View style={styles.tierColumn}>
-              <TierBadge tier="premium" />
-              <BodyBase style={styles.tierPrice}>
-                ${PricingConfig.MONTHLY_PRICE}/month
-              </BodyBase>
-              <BodyBase color={500} style={styles.tierSavings}>
-                or ${PricingConfig.ANNUAL_PRICE}/year (save 17%)
-              </BodyBase>
-            </View>
+          {/* CTA Buttons */}
+          <View style={styles.ctaButtons}>
+            <Button
+              title={isTrialStarted ? "Trial Started!" : `Start ${FeatureFlags.TRIAL_DURATION_DAYS}-Day Free Trial`}
+              onPress={handleStartTrial}
+              variant="premium"
+              size="lg"
+              fullWidth
+              loading={isLoading}
+              disabled={isTrialStarted}
+            />
+            <Button
+              title="📱 Download Free App"
+              onPress={handleGetStartedFree}
+              variant="secondary"
+              size="lg"
+              fullWidth
+            />
           </View>
 
-          {/* Feature Comparison */}
-          <Card style={styles.comparisonCard}>
-            <FeatureComparison
-              feature="Recipe Browsing"
-              free={true}
-              premium={true}
-              description="Unlimited browsing with beautiful images"
-            />
-            <FeatureComparison
-              feature="Recipe Saves"
-              free={false}
-              premium={true}
-              description={`${FeatureFlags.FREE_RECIPE_LIMIT} recipes vs unlimited`}
-            />
-            <FeatureComparison
-              feature="Collections"
-              free={false}
-              premium={true}
-              description={`${FeatureFlags.FREE_COLLECTION_LIMIT} collection vs unlimited`}
-            />
-            <FeatureComparison
-              feature="OCR Recipe Import"
-              free={false}
-              premium={true}
-              description="Extract recipes from photos automatically"
-            />
-            <FeatureComparison
-              feature="Advanced Search"
-              free={false}
-              premium={true}
-              description="Filter by ingredients, diet, cook time"
-            />
-            <FeatureComparison
-              feature="Ad-Free Experience"
-              free={false}
-              premium={true}
-              description="No banner ads or interruptions"
-            />
-          </Card>
+          {/* Trust Indicators */}
+          <View style={styles.trustIndicators}>
+            <View style={styles.trustItem}>
+              <View style={[styles.trustDot, { backgroundColor: DesignTokens.colors.success[500] }]} />
+              <BodyBase color={500} style={styles.trustText}>Free Forever Plan</BodyBase>
+            </View>
+            <View style={styles.trustItem}>
+              <View style={[styles.trustDot, { backgroundColor: DesignTokens.colors.primary[500] }]} />
+              <BodyBase color={500} style={styles.trustText}>Works on All Devices</BodyBase>
+            </View>
+            <View style={styles.trustItem}>
+              <View style={[styles.trustDot, { backgroundColor: DesignTokens.colors.accent[500] }]} />
+              <BodyBase color={500} style={styles.trustText}>Cancel Anytime</BodyBase>
+            </View>
+          </View>
         </View>
 
-        {/* CTA Section */}
-        <View style={styles.ctaSection}>
-          <Card variant="premium" style={styles.ctaCard}>
-            <HeadingLG style={styles.ctaTitle}>Start Your Free Trial</HeadingLG>
-            <BodyBase style={styles.ctaDescription}>
-              Try all premium features for {FeatureFlags.TRIAL_DURATION_DAYS} days. 
-              No credit card required.
+        {/* Features Section */}
+        <View style={styles.featuresSection}>
+          <View style={styles.featuresSectionHeader}>
+            <HeadingLG style={styles.sectionTitle}>
+              Everything You Need for Recipe Success
+            </HeadingLG>
+            <BodyLG style={styles.sectionSubtitle} color={600}>
+              From free recipe browsing to premium import tools, RecipeHive grows with your cooking journey.
+            </BodyLG>
+          </View>
+
+          <View style={styles.featuresGrid}>
+            {keyFeatures.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                tier={feature.tier}
+              />
+            ))}
+          </View>
+        </View>
+
+        {/* Final CTA Section */}
+        <View style={styles.finalCta}>
+          <Card variant="premium" style={styles.finalCtaCard}>
+            <HeadingLG style={styles.finalCtaTitle}>Ready to Perfect Your Recipe Collection?</HeadingLG>
+            <BodyBase style={styles.finalCtaDescription}>
+              Join thousands of home cooks who've transformed their recipe chaos into beautifully organized digital cookbooks.
             </BodyBase>
-            <View style={styles.ctaButtons}>
+            <View style={styles.finalCtaButtons}>
               <Button
-                title={isTrialStarted ? "Trial Started!" : `Start ${FeatureFlags.TRIAL_DURATION_DAYS}-Day Trial`}
+                title="Start Your Free Trial"
                 onPress={handleStartTrial}
                 variant="premium"
                 size="lg"
                 fullWidth
                 loading={isLoading}
-                disabled={isTrialStarted}
-              />
-              <Button
-                title="Continue with Free Plan"
-                onPress={handleGetStartedFree}
-                variant="ghost"
-                size="md"
-                fullWidth
               />
             </View>
           </Card>
-        </View>
-
-        {/* Trust & Social Proof */}
-        <View style={styles.trustSection}>
-          <BodyBase color={500} style={styles.trustText}>
-            Cross-platform • iOS, Android & Web • Secure & Private
-          </BodyBase>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -209,7 +215,7 @@ export default function LandingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: DesignTokens.colors.neutral[0],
+    backgroundColor: DesignTokens.colors.neutral[50],
   },
   
   scrollView: {
@@ -224,148 +230,135 @@ const styles = StyleSheet.create({
     paddingHorizontal: DesignTokens.semanticSpacing.md,
     paddingVertical: DesignTokens.semanticSpacing['2xl'],
     alignItems: 'center',
-    textAlign: 'center',
+    backgroundColor: DesignTokens.colors.neutral[0],
   },
   
   heroTitle: {
     textAlign: 'center',
+    marginBottom: DesignTokens.semanticSpacing.lg,
+    maxWidth: 400,
+  },
+  
+  heroDescription: {
+    textAlign: 'center',
     marginBottom: DesignTokens.semanticSpacing.md,
+    maxWidth: 500,
   },
   
   heroSubtitle: {
     textAlign: 'center',
+    marginBottom: DesignTokens.semanticSpacing.xl,
     maxWidth: 400,
   },
   
-  valueProps: {
-    paddingHorizontal: DesignTokens.semanticSpacing.md,
+  ctaButtons: {
+    width: '100%',
+    maxWidth: 400,
     gap: DesignTokens.semanticSpacing.md,
-    marginBottom: DesignTokens.semanticSpacing['2xl'],
+    marginBottom: DesignTokens.semanticSpacing.xl,
   },
   
-  valueCard: {
-    padding: DesignTokens.semanticSpacing.lg,
+  trustIndicators: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: DesignTokens.semanticSpacing.lg,
   },
   
-  valueTitle: {
-    marginBottom: DesignTokens.semanticSpacing.sm,
+  trustItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: DesignTokens.spacing[2],
   },
   
-  pricingSection: {
+  trustDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  
+  trustText: {
+    fontSize: DesignTokens.typography.fontSize.sm,
+  },
+  
+  featuresSection: {
     paddingHorizontal: DesignTokens.semanticSpacing.md,
-    marginBottom: DesignTokens.semanticSpacing['2xl'],
+    paddingVertical: DesignTokens.semanticSpacing['2xl'],
+  },
+  
+  featuresSectionHeader: {
+    alignItems: 'center',
+    marginBottom: DesignTokens.semanticSpacing.xl,
   },
   
   sectionTitle: {
     textAlign: 'center',
-    marginBottom: DesignTokens.semanticSpacing.xl,
+    marginBottom: DesignTokens.semanticSpacing.md,
   },
   
-  tierHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: DesignTokens.semanticSpacing.lg,
-    paddingHorizontal: DesignTokens.semanticSpacing.md,
+  sectionSubtitle: {
+    textAlign: 'center',
+    maxWidth: 400,
   },
   
-  tierColumn: {
-    alignItems: 'center',
-    flex: 1,
+  featuresGrid: {
+    gap: DesignTokens.semanticSpacing.lg,
   },
   
-  tierPrice: {
-    marginTop: DesignTokens.semanticSpacing.sm,
-    fontWeight: DesignTokens.typography.fontWeight.semibold,
-  },
-  
-  tierSavings: {
-    fontSize: DesignTokens.typography.fontSize.sm,
-    marginTop: DesignTokens.spacing[2],
-  },
-  
-  comparisonCard: {
+  featureCard: {
     padding: DesignTokens.semanticSpacing.lg,
   },
   
-  featureRow: {
+  featureHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingVertical: DesignTokens.semanticSpacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: DesignTokens.colors.neutral[100],
+    marginBottom: DesignTokens.semanticSpacing.md,
   },
   
-  featureInfo: {
-    flex: 1,
-    marginRight: DesignTokens.semanticSpacing.md,
+  iconContainer: {
+    backgroundColor: DesignTokens.colors.neutral[100],
+    padding: DesignTokens.spacing[3],
+    borderRadius: DesignTokens.borderRadius.lg,
   },
   
-  featureName: {
-    fontWeight: DesignTokens.typography.fontWeight.medium,
-    marginBottom: DesignTokens.spacing[2],
+  featureIcon: {
+    fontSize: 24,
+  },
+  
+  featureTitle: {
+    marginBottom: DesignTokens.semanticSpacing.sm,
   },
   
   featureDescription: {
-    fontSize: DesignTokens.typography.fontSize.sm,
+    lineHeight: DesignTokens.typography.fontSize.base * DesignTokens.typography.lineHeight.relaxed,
   },
   
-  featureChecks: {
-    flexDirection: 'row',
-    gap: DesignTokens.semanticSpacing.lg,
-    minWidth: 80,
-  },
-  
-  checkContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 24,
-    height: 24,
-  },
-  
-  checkDisabled: {
-    opacity: 0.4,
-  },
-  
-  checkPremium: {
-    backgroundColor: DesignTokens.colors.premium.background,
-    borderRadius: 12,
-  },
-  
-  ctaSection: {
+  finalCta: {
     paddingHorizontal: DesignTokens.semanticSpacing.md,
     marginBottom: DesignTokens.semanticSpacing.xl,
   },
   
-  ctaCard: {
+  finalCtaCard: {
     alignItems: 'center',
     textAlign: 'center',
     padding: DesignTokens.semanticSpacing.xl,
   },
   
-  ctaTitle: {
+  finalCtaTitle: {
     textAlign: 'center',
     marginBottom: DesignTokens.semanticSpacing.sm,
     color: DesignTokens.colors.premium.primary,
   },
   
-  ctaDescription: {
+  finalCtaDescription: {
     textAlign: 'center',
     marginBottom: DesignTokens.semanticSpacing.lg,
     maxWidth: 300,
   },
   
-  ctaButtons: {
+  finalCtaButtons: {
     width: '100%',
-    gap: DesignTokens.semanticSpacing.sm,
-  },
-  
-  trustSection: {
-    alignItems: 'center',
-    paddingHorizontal: DesignTokens.semanticSpacing.md,
-  },
-  
-  trustText: {
-    textAlign: 'center',
-    fontSize: DesignTokens.typography.fontSize.sm,
+    maxWidth: 300,
   },
 });
