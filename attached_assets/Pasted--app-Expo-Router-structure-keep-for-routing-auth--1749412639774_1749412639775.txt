@@ -1,0 +1,60 @@
+├── app/                              # Expo Router structure (keep for routing)
+│   ├── (auth)/                       # Authentication group
+│   │   ├── login.tsx
+│   │   ├── register.tsx
+│   │   └── forgot-password.tsx
+│   ├── (main)/                       # Main app group (authenticated)
+│   │   ├── (tabs)/                   # Tab navigation
+│   │   │   ├── home.tsx
+│   │   │   ├── recipes.tsx
+│   │   │   ├── collections.tsx       # Premium only
+│   │   │   ├── social.tsx            # Premium only
+│   │   │   └── profile.tsx
+│   │   ├── recipe/
+│   │   │   ├── [id].tsx              # Recipe detail
+│   │   │   ├── create.tsx
+│   │   │   └── edit/[id].tsx
+│   │   └── settings/
+│   ├── (onboarding)/                 # Onboarding flow
+│   ├── landing.tsx                   # Landing/marketing page
+│   └── _layout.tsx
+├── src/
+│   ├── components/                   # Reusable components
+│   │   ├── ui/                       # Basic UI components
+│   │   ├── recipe/                   # Recipe-specific components
+│   │   ├── media/                    # Media handling components
+│   │   ├── subscription/             # Subscription/paywall components
+│   │   └── forms/                    # Form components
+│   ├── hooks/                        # Custom React hooks
+│   │   ├── useSubscription.ts
+│   │   ├── useMedia.ts
+│   │   └── useAuth.ts
+│   ├── services/                     # Business logic services
+│   │   ├── api/                      # API client services
+│   │   ├── auth/                     # Authentication service
+│   │   ├── media/                    # Media processing service
+│   │   ├── subscription/             # Subscription management
+│   │   └── analytics/                # Analytics service
+│   ├── store/                        # State management
+│   │   ├── auth.ts
+│   │   ├── recipes.ts
+│   │   ├── subscription.ts
+│   │   └── media.ts
+│   ├── utils/                        # Utility functions
+│   │   ├── validation.ts
+│   │   ├── media-helpers.ts
+│   │   └── subscription-helpers.ts
+│   └── types/                        # TypeScript type definitions
+├── api/                              # Backend API routes (if using Replit backend)
+│   ├── auth/
+│   ├── recipes/
+│   ├── media/
+│   ├── subscriptions/
+│   └── admin/
+├── assets/                           # Static assets
+│   ├── images/
+│   ├── icons/
+│   └── fonts/
+├── constants/                        # App constants
+├── prisma/                          # Database schema and migrations
+└── lib/                             # Database and external service configs
