@@ -14,14 +14,14 @@ export const TierBadge: React.FC<TierBadgeProps> = ({ tier, size = 'md' }) => {
     switch (tier) {
       case 'free':
         return {
-          label: 'EXPLORER',
+          label: 'FREE',
           backgroundColor: DesignTokens.colors.free.background,
           borderColor: DesignTokens.colors.free.border,
           textColor: DesignTokens.colors.free.primary,
         };
       case 'premium':
         return {
-          label: 'MASTER',
+          label: 'PREMIUM',
           backgroundColor: DesignTokens.colors.premium.background,
           borderColor: DesignTokens.colors.premium.border,
           textColor: DesignTokens.colors.premium.primary,

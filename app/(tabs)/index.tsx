@@ -139,7 +139,7 @@ export default function RecipeHiveHomepage() {
               disabled={isTrialStarted}
             />
             <Button
-              title="📱 Download Free App"
+              title="Sign In"
               onPress={handleGetStartedFree}
               variant="secondary"
               size="lg"
