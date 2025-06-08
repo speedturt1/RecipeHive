@@ -113,7 +113,7 @@ Based on comprehensive review and business requirements analysis, this updated t
 
 ### 8.0 Recipe Collections & Organization with Freemium Limits
 - [ ] 8.1 Create recipe saving system with freemium limits (10 saves for free, unlimited for premium)
-- [ ] 8.2 Implement recipe collections with tier restrictions (1 collection free, unlimited premium)
+- [ ] 8.2 Implement recipe collections with tier restrictions (premium feature)
 - [ ] 8.3 Build collection management with contextual upgrade prompts for free users
 - [ ] 8.4 Add collection sharing capabilities (premium feature) with social proof
 - [ ] 8.5 Implement collection collaboration features for premium users
@@ -123,13 +123,13 @@ Based on comprehensive review and business requirements analysis, this updated t
 - [ ] 8.9 Create collection analytics for premium users with engagement insights
 - [ ] 8.10 Add collection export and backup features for premium subscribers
 - [ ] 8.11 Integrate Google AdMob banner ads in recipe browsing and collection views
-- [ ] 8.12 Implement interstitial ads between search results with frequency capping (max 1 per 5 minutes)
+- [ ] 8.12 Implement interstitial ads between search results with frequency capping for free users (max 1 per 5 minutes)
 - [ ] 8.13 Create ad revenue tracking and optimization analytics with user experience monitoring
 - [ ] 8.14 Add sponsored content integration for kitchen and grocery brands
 
-### 9.0 Shopping List Management with Tier Features
-- [ ] 9.1 Create basic shopping list interface (1 active list for free users with upgrade prompts)
-- [ ] 9.2 Implement automatic shopping list generation from saved recipes with ingredient consolidation
+### 9.0 Shopping List Management with Tier Features (premium feature)
+- [ ] 9.1 Create basic shopping list interface
+- [ ] 9.2 Implement automatic shopping list generation from saved recipes with ingredient consolidation 
 - [ ] 9.3 Add grocery category organization (8 categories) with visual upgrade benefits for premium
 - [ ] 9.4 Build intelligent ingredient consolidation system for multiple recipes
 - [ ] 9.5 Implement smart ingredient scaling based on serving adjustments
@@ -143,7 +143,7 @@ Based on comprehensive review and business requirements analysis, this updated t
 
 ## Phase 4: Social Features & Community (Weeks 11-12)
 
-### 10.0 Social Features & Community with Premium Differentiation
+### 10.0 Social Features & Community (premium feature)
 - [ ] 10.1 Implement user following system with upgrade prompts and premium user discovery
 - [ ] 10.2 Create recipe rating and review system with media-rich feedback
 - [ ] 10.3 Build social feed with recipe discoveries and premium content highlights

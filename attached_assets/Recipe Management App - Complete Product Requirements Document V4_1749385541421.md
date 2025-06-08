@@ -31,16 +31,15 @@ The primary goal is to create a centralized platform where users can discover, s
 
 ## User Stories
 
-### Free Tier User Stories ("Recipe Explorer")
+### Free Tier User Stories
 1. **As a casual cook**, I want to browse unlimited public recipes with clear images for free, so I can discover new meal ideas and see what the final result should look like
-2. **As a budget-conscious user**, I want to save up to 10 favorite recipes with their images, so I can bookmark the most important visual recipes while deciding if premium is worth it
-3. **As a new user**, I want to create one recipe collection to organize my saved recipes, and upload images for any public recipes I create
-4. **As a recipe browser**, I want to use basic text search to find recipes with appealing images, so I can locate specific dishes that look appetizing
-5. **As a mobile user**, I want to view ads between searches rather than pay for premium, so I can use the app for free while browsing visually-rich content
+2. **As a budget-conscious user**, I want to save up to 10 favorite recipes with their images directly to my account, so I can bookmark the most important visual recipes while deciding if premium is worth it
+3. **As a recipe browser**, I want to use basic text search to find recipes with appealing images, so I can locate specific dishes that look appetizing
+4. **As a mobile user**, I want to view ads between searches rather than pay for premium, so I can use the app for free while browsing visually-rich content
 
-### Premium User Stories ("Recipe Master")
+### Premium User Stories
 1. **As a serious cook**, I want unlimited recipe saves and collections with full image management, so I can build comprehensive visual recipe libraries organized by themes
-2. **As a busy parent**, I want to use OCR to capture handwritten family recipes and web scraping to import from food blogs with images, so I can digitize my entire recipe collection effortlessly
+2. **As a busy parent**, I want to use OCR to capture handwritten family recipes and web scraping to import from food blogs with images, so I can digitize my entire recipe collection effortlessly. I also want to be able to generate shopping lists based on selected recipes that consolidate and organize the ingrediants I need to cook.
 3. **As a cooking enthusiast**, I want to upload videos showing my cooking process, so I can share techniques and build my reputation in the community
 4. **As a focused user**, I want an ad-free experience with high-quality media, so I can browse and cook without interruptions
 5. **As a social cook**, I want to follow other users, comment on recipes with images/videos, and share my modifications, so I can be part of the visual cooking community
@@ -99,15 +98,15 @@ The primary goal is to create a centralized platform where users can discover, s
 30. The system must allow free users to browse unlimited public recipes with banner ads displayed
 31. The system must provide basic text search functionality for recipe discovery
 32. The system must allow free users to save up to 10 recipes with clear upgrade prompts when limit is reached
-33. The system must allow free users to create 1 recipe collection with upgrade prompts for additional collections
-34. The system must provide basic shopping list functionality (1 active list)
-35. The system must display interstitial ads between search results and recipe browsing for free users
-36. The system must allow free users to upload images and videos with same quality standards as premium users
+33. The system must display interstitial ads between search results and recipe browsing for free users
+34. The system must allow free users to upload images and videos with same quality standards as premium users
+35. The system must display banner ads during recipe browsing for free users with premium upgrade prompts
+
 
 ### Premium Features (Subscription Required)
-37. The system must provide completely ad-free experience for premium subscribers
-38. The system must offer unlimited recipe saves and collections for premium users
-39. The system must enable OCR text extraction from uploaded recipe images with manual editing capabilities
+36. The system must provide completely ad-free experience for premium subscribers
+37. The system must offer unlimited recipe saves and collections for premium users
+38. The system must enable OCR text extraction from uploaded recipe images with manual editing capabilities
 40. The system must support web scraping from recipe URLs with automatic ingredient and instruction parsing
 41. The system must provide advanced search with filters for ingredients, dietary restrictions, cuisine, cooking time, and difficulty
 42. The system must enable social features including following users, commenting, and recipe modifications with attribution

@@ -26,19 +26,20 @@
 
 Based on the competitive analysis, here's the refined **Option 1: Ad-Supported Freemium** model:
 
-### **Free Tier: "Recipe Explorer"**
+### **Free Tier**
 - ✅ **Browse all public recipes** (competitive with Whisk/Allrecipes)
 - ✅ **Basic text search** 
-- ✅ **Save up to 10 recipes** (vs. unlimited paid)
-- ✅ **Create 1 collection** (vs. unlimited paid)
-- ✅ **Basic shopping lists** (1 active list)
-- ✅ **Community browsing** (view only)
+- ✅ **Save up to 10 recipes** (no collections)
+- ✅ **View recipe ratings and reviews** (read-only)
 - ❌ **Banner ads & video interstitials**
 - ❌ **Manual recipe entry only** (no OCR/import)
+- ❌ **No collections or organization features**
+- ❌ **No shopping lists**
+- ❌ **No social features** (following, commenting, sharing)
 - ❌ **No advanced search filters**
 - ❌ **No offline access**
 
-### **Premium Tier: "Recipe Master"**
+### **Premium Tier**
 **Monthly: $4.99/month**  
 **Annual: $39.99/year** *(33% discount - $3.33/month)*
 
@@ -49,7 +50,7 @@ Based on the competitive analysis, here's the refined **Option 1: Ad-Supported F
 - ✅ **OCR & web scraping import**
 - ✅ **Social features & community** (follow, comment, share)
 - ✅ **Offline recipe access**
-- ✅ **Multiple shopping lists** (unlimited)
+- ✅ **Shopping list generation** (unlimited)
 - ✅ **Smart grocery organization** (8 categories)
 - ✅ **Export & sharing tools**
 - ✅ **Priority customer support**
