@@ -1,6 +1,4 @@
 
-#!/usr/bin/env node
-
 /**
  * Replit PostgreSQL Setup Script
  * This script helps configure and connect to Replit's PostgreSQL service
@@ -9,6 +7,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 function setupReplitDatabase() {
   console.log('🚀 Setting up Replit PostgreSQL for RecipeHive...\n');
