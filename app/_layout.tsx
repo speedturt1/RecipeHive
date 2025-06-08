@@ -80,9 +80,6 @@ export default function RootLayout() {
         {/* Main App Group - Protected Routes */}
         <Stack.Screen name="(main)" options={{ headerShown: false }} />
         
-        {/* Legacy tabs (keeping for now during migration) */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
