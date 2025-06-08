@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     padding: DesignTokens.spacing[4],
   },
   title: {
-    fontSize: DesignToken.colors.neutral[900],
+    fontSize: DesignTokens.typography.fontSize.xl,
+    color: DesignTokens.colors.neutral[900],
     marginBottom: DesignTokens.spacing[2],
   },
   subtitle: {
