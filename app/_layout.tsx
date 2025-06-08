@@ -1,11 +1,10 @@
-
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import 'react-native-reanimated/lib/reanimated2/js-reanimated';
+import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { DesignTokens } from '@/constants/DesignTokens';
@@ -33,7 +32,7 @@ const CustomDarkTheme = {
     ...DarkTheme.colors,
     primary: DesignTokens.colors.primary[400],
     background: DesignTokens.colors.neutral[900],
-    card: DesignTokens.colors.neutral[800],
+    card: DarkTheme.colors.neutral[800],
     text: DesignTokens.colors.neutral[100],
     border: DesignTokens.colors.neutral[700],
     notification: DesignTokens.colors.accent[400],
