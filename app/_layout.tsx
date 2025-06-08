@@ -69,6 +69,10 @@ export default function RootLayout() {
         },
       }}>
         {/* Landing Screen - Entry Point */}
+        {/* Default route - redirect to landing */}
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        
+        {/* Landing Screen - Entry Point */}
         <Stack.Screen name="landing" options={{ headerShown: false }} />
         
         {/* Authentication Group */}
