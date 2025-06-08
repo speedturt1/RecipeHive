@@ -134,7 +134,7 @@ export default function RecipeHiveHomepage() {
         {/* App Header */}
         <View style={styles.appHeader}>
           <Image 
-            source={require('@/assets/images/recipehive-logo.png')}
+            source={require('@/assets/images/recipehive-logo.jpg')}
             style={styles.appLogo}
             contentFit="contain"
           />
