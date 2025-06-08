@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// RecipeHive Database Schema V4
+// Comprehensive schema for recipe management app
 
 generator client {
   provider = "prisma-client-js"
@@ -10,24 +10,616 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Enums
+enum UserType {
+  regular
+  content_creator
+  admin
+}
+
+enum SubscriptionTier {
+  free
+  premium_monthly
+  premium_yearly
+}
+
+enum SubscriptionStatus {
+  active
+  canceled
+  past_due
+  trialing
+  expired
+}
+
+enum Platform {
+  web
+  ios
+  android
+}
+
+enum ContentStatus {
+  active
+  hidden
+  reported
+  under_review
+  banned
+}
+
+enum DifficultyLevel {
+  beginner
+  intermediate
+  advanced
+  expert
+}
+
+enum CuisineType {
+  american
+  italian
+  mexican
+  chinese
+  indian
+  french
+  japanese
+  mediterranean
+  thai
+  korean
+  other
+}
+
+enum DietaryRestriction {
+  vegetarian
+  vegan
+  gluten_free
+  dairy_free
+  nut_free
+  keto
+  paleo
+  low_carb
+  other
+}
+
+enum ModerationAction {
+  approved
+  rejected
+  flagged
+  banned
+}
+
+enum ActivityType {
+  recipe_view
+  recipe_save
+  recipe_share
+  search
+  profile_visit
+  collection_create
+  follow_user
+  rate_recipe
+  upload_media
+}
+
+enum ConversionEventType {
+  trial_start
+  subscription_purchase
+  subscription_cancel
+  feature_paywall_hit
+  upgrade_prompt_shown
+  upgrade_completed
+}
+
+// 1. User Management Tables
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String            @id @default(cuid())
+  email             String            @unique
+  username          String?           @unique
+  displayName       String?
+  profileImageUrl   String?
+  userType          UserType          @default(regular)
+  subscriptionTier  SubscriptionTier  @default(free)
+  subscriptionStatus SubscriptionStatus @default(active)
+  trialEndsAt       DateTime?
+  subscriptionEndsAt DateTime?
+  stripeCustomerId  String?           @unique
+  emailVerified     Boolean           @default(false)
+  isActive          Boolean           @default(true)
+  lastLoginAt       DateTime?
+  preferredLanguage String            @default("en")
+  timeZone          String            @default("UTC")
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  // Relations
+  sessions              UserSession[]
+  subscriptionEvents    SubscriptionEvent[]
+  recipes               Recipe[]
+  recipeSaves           RecipeSave[]
+  collections           RecipeCollection[]
+  following             UserFollow[]      @relation("UserFollows")
+  followers             UserFollow[]      @relation("UserFollowers")
+  ratings               RecipeRating[]
+  activityLogs          UserActivityLog[]
+  searchQueries         SearchQuery[]
+  conversionEvents      ConversionEvent[]
+  featureUsage          FeatureUsageStat[]
+  moderationEvents      ContentModerationEvent[]
+
+  @@map("users")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+model SubscriptionPlan {
+  id                String   @id @default(cuid())
+  name              String
+  tier              SubscriptionTier @unique
+  stripePriceId     String   @unique
+  monthlyPrice      Decimal?
+  yearlyPrice       Decimal?
+  features          Json
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  subscriptionEvents SubscriptionEvent[]
+
+  @@map("subscription_plans")
+}
+
+model SubscriptionEvent {
+  id               String            @id @default(cuid())
+  userId           String
+  planId           String
+  eventType        String
+  stripeEventId    String?           @unique
+  previousTier     SubscriptionTier?
+  newTier          SubscriptionTier
+  amount           Decimal?
+  currency         String            @default("usd")
+  trialStart       DateTime?
+  trialEnd         DateTime?
+  subscriptionStart DateTime?
+  subscriptionEnd  DateTime?
+  metadata         Json?
+  createdAt        DateTime          @default(now())
+
+  // Relations
+  user User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan SubscriptionPlan  @relation(fields: [planId], references: [id])
+
+  @@map("subscription_events")
+}
+
+model UserSession {
+  id               String    @id @default(cuid())
+  userId           String
+  sessionToken     String    @unique
+  subscriptionTier SubscriptionTier
+  platform         Platform
+  deviceInfo       Json?
+  expoPushToken    String?
+  isActive         Boolean   @default(true)
+  expiresAt        DateTime
+  lastActivityAt   DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+// 2. Recipe Management with Media
+model Recipe {
+  id                String           @id @default(cuid())
+  title             String
+  description       String?
+  instructions      String
+  cookingTime       Int?
+  prepTime          Int?
+  servings          Int?
+  difficulty        DifficultyLevel?
+  cuisineType       CuisineType?
+  dietaryRestrictions DietaryRestriction[]
+  ingredientsList   String
+  nutritionInfo     Json?
+  authorId          String
+  contentStatus     ContentStatus    @default(active)
+  isPublic          Boolean          @default(true)
+  requiresPremium   Boolean          @default(false)
+  viewCount         Int              @default(0)
+  saveCount         Int              @default(0)
+  averageRating     Decimal?         @db.Decimal(3,2)
+  ratingCount       Int              @default(0)
+  originalUrl       String?
+  importedAt        DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  // Relations
+  author               User                   @relation(fields: [authorId], references: [id])
+  images               RecipeImage[]
+  videos               RecipeVideo[]
+  saves                RecipeSave[]
+  collections          RecipeCollectionItem[]
+  ratings              RecipeRating[]
+  ingredients          RecipeIngredient[]
+  moderationEvents     ContentModerationEvent[]
+  activityLogs         UserActivityLog[]
+  adImpressions        AdImpression[]
+
+  @@map("recipes")
+}
+
+model RecipeImage {
+  id          String   @id @default(cuid())
+  recipeId    String
+  imageUrl    String
+  thumbnailUrl String?
+  altText     String?
+  isPrimary   Boolean  @default(false)
+  width       Int?
+  height      Int?
+  fileSize    Int?
+  mimeType    String?
+  storageKey  String?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@map("recipe_images")
+}
+
+model RecipeVideo {
+  id           String   @id @default(cuid())
+  recipeId     String
+  videoUrl     String
+  thumbnailUrl String?
+  duration     Int?
+  width        Int?
+  height       Int?
+  fileSize     Int?
+  mimeType     String?
+  storageKey   String?
+  createdAt    DateTime @default(now())
+
+  // Relations
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@map("recipe_videos")
+}
+
+model RecipeSave {
+  id        String   @id @default(cuid())
+  userId    String
+  recipeId  String
+  createdAt DateTime @default(now())
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+  @@map("recipe_saves")
+}
+
+// 3. Content Moderation
+model ContentModerationEvent {
+  id           String           @id @default(cuid())
+  contentType  String
+  contentId    String
+  reportedById String?
+  reviewedById String?
+  action       ModerationAction
+  reason       String?
+  details      Json?
+  createdAt    DateTime         @default(now())
+  reviewedAt   DateTime?
+
+  // Relations
+  reportedBy User?   @relation(fields: [reportedById], references: [id])
+  recipe     Recipe? @relation(fields: [contentId], references: [id])
+
+  @@map("content_moderation_events")
+}
+
+model ContentWarning {
+  id          String   @id @default(cuid())
+  contentType String
+  contentId   String
+  warningType String
+  message     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@map("content_warnings")
+}
+
+// 4. Collections and Social Features
+model RecipeCollection {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items RecipeCollectionItem[]
+
+  @@map("recipe_collections")
+}
+
+model RecipeCollectionItem {
+  id           String   @id @default(cuid())
+  collectionId String
+  recipeId     String
+  addedAt      DateTime @default(now())
+
+  // Relations
+  collection RecipeCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  recipe     Recipe           @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, recipeId])
+  @@map("recipe_collection_items")
+}
+
+model UserFollow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  // Relations
+  follower  User @relation("UserFollows", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("user_follows")
+}
+
+model RecipeRating {
+  id        String   @id @default(cuid())
+  userId    String
+  recipeId  String
+  rating    Int      @db.SmallInt
+  review    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([authorId])
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId])
+  @@map("recipe_ratings")
 }
+
+// 5. Analytics and Tracking
+model UserActivityLog {
+  id           String       @id @default(cuid())
+  userId       String
+  activityType ActivityType
+  resourceType String?
+  resourceId   String?
+  metadata     Json?
+  platform     Platform
+  userTier     SubscriptionTier
+  sessionId    String?
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime     @default(now())
+
+  // Relations
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe? @relation(fields: [resourceId], references: [id])
+
+  @@map("user_activity_logs")
+}
+
+model SearchQuery {
+  id           String           @id @default(cuid())
+  userId       String
+  queryText    String
+  searchType   String
+  resultsCount Int
+  userTier     SubscriptionTier
+  wasBlocked   Boolean          @default(false)
+  platform     Platform
+  createdAt    DateTime         @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("search_queries")
+}
+
+model ConversionEvent {
+  id           String              @id @default(cuid())
+  userId       String
+  eventType    ConversionEventType
+  fromTier     SubscriptionTier?
+  toTier       SubscriptionTier?
+  revenue      Decimal?
+  metadata     Json?
+  platform     Platform
+  createdAt    DateTime            @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("conversion_events")
+}
+
+model FeatureUsageStat {
+  id             String           @id @default(cuid())
+  userId         String
+  featureName    String
+  usageCount     Int              @default(1)
+  lastUsedAt     DateTime         @default(now())
+  userTier       SubscriptionTier
+  tierAtFirstUse SubscriptionTier
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, featureName])
+  @@map("feature_usage_stats")
+}
+
+// 6. Ad Revenue and Media Performance
+model AdImpression {
+  id         String   @id @default(cuid())
+  userId     String?
+  recipeId   String?
+  adUnit     String
+  platform   Platform
+  revenue    Decimal?
+  userTier   SubscriptionTier?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  recipe Recipe? @relation(fields: [recipeId], references: [id])
+
+  @@map("ad_impressions")
+}
+
+model MediaStorageAnalytic {
+  id          String   @id @default(cuid())
+  mediaType   String
+  mediaId     String
+  storageSize Int
+  bandwidth   Int
+  accessCount Int
+  cost        Decimal?
+  date        DateTime @db.Date
+  createdAt   DateTime @default(now())
+
+  @@map("media_storage_analytics")
+}
+
+// 7. Business Intelligence
+model CohortAnalysis {
+  id              String   @id @default(cuid())
+  cohortMonth     DateTime @db.Date
+  userTier        SubscriptionTier
+  usersAcquired   Int
+  retention1Month Decimal? @db.Decimal(5,4)
+  retention3Month Decimal? @db.Decimal(5,4)
+  retention6Month Decimal? @db.Decimal(5,4)
+  retention12Month Decimal? @db.Decimal(5,4)
+  avgRevenue      Decimal?
+  createdAt       DateTime @default(now())
+
+  @@unique([cohortMonth, userTier])
+  @@map("cohort_analysis")
+}
+
+model SubscriptionMetricsDaily {
+  id              String           @id @default(cuid())
+  date            DateTime         @db.Date
+  tier            SubscriptionTier
+  newSignups      Int              @default(0)
+  cancellations   Int              @default(0)
+  activeUsers     Int              @default(0)
+  revenue         Decimal          @default(0)
+  churnRate       Decimal?         @db.Decimal(5,4)
+  createdAt       DateTime         @default(now())
+
+  @@unique([date, tier])
+  @@map("subscription_metrics_daily")
+}
+
+// 8. Ingredients and Nutrition
+model Ingredient {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String?
+  nutritionPer100g Json?
+  commonUnits Json?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  recipeIngredients RecipeIngredient[]
+
+  @@map("ingredients")
+}
+
+model RecipeIngredient {
+  id           String  @id @default(cuid())
+  recipeId     String
+  ingredientId String
+  quantity     Decimal?
+  unit         String?
+  preparation  String?
+  isOptional   Boolean @default(false)
+
+  // Relations
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@map("recipe_ingredients")
+}
+
+// 9. Offline Sync Support
+model OfflineSyncQueue {
+  id           String   @id @default(cuid())
+  userId       String
+  operation    String
+  resourceType String
+  resourceData Json
+  syncStatus   String   @default("pending")
+  retryCount   Int      @default(0)
+  errorMessage String?
+  createdAt    DateTime @default(now())
+  syncedAt     DateTime?
+
+  @@map("offline_sync_queue")
+}
+
+// Indexes for performance optimization
+// User indexes
+@@index([User.email])
+@@index([User.subscriptionTier])
+@@index([User.subscriptionStatus])
+@@index([User.createdAt])
+
+// Recipe indexes
+@@index([Recipe.authorId])
+@@index([Recipe.contentStatus])
+@@index([Recipe.isPublic])
+@@index([Recipe.requiresPremium])
+@@index([Recipe.cuisineType])
+@@index([Recipe.difficulty])
+@@index([Recipe.averageRating])
+@@index([Recipe.createdAt])
+@@index([Recipe.saveCount])
+@@index([Recipe.viewCount])
+
+// Activity indexes
+@@index([UserActivityLog.userId])
+@@index([UserActivityLog.activityType])
+@@index([UserActivityLog.createdAt])
+@@index([UserActivityLog.platform])
+
+// Search indexes
+@@index([SearchQuery.userId])
+@@index([SearchQuery.queryText])
+@@index([SearchQuery.createdAt])
+
+// Analytics indexes
+@@index([ConversionEvent.userId])
+@@index([ConversionEvent.eventType])
+@@index([ConversionEvent.createdAt])
+
+// Ad revenue indexes
+@@index([AdImpression.recipeId])
+@@index([AdImpression.platform])
+@@index([AdImpression.createdAt])
+
+// Business intelligence indexes
+@@index([SubscriptionMetricsDaily.date])
+@@index([SubscriptionMetricsDaily.tier])
+@@index([CohortAnalysis.cohortMonth])

@@ -5,11 +5,11 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "test": "jest --watchAll",
-    "lint": "expo lint"
+    "db:setup": "node ./scripts/setup-replit-db.js",
+    "db:init": "node ./scripts/init-database.js init",
+    "db:test": "node ./scripts/init-database.js test",
+    "db:reset": "node ./scripts/init-database.js reset",
+    "db:seed": "npx prisma db seed"
   },
   "jest": {
     "preset": "jest-expo"
