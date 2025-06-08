@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image } from 'expo-image';
 import { HeadingXL, HeadingLG, BodyLG, BodyBase } from '@/components/design-system/Typography';
 import { Button } from '@/components/design-system/Button';
 import { Card } from '@/components/design-system/Card';
@@ -130,6 +131,16 @@ export default function RecipeHiveHomepage() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* App Header */}
+        <View style={styles.appHeader}>
+          <Image 
+            source={require('@/assets/images/recipehive-logo.png')}
+            style={styles.appLogo}
+            contentFit="contain"
+          />
+          <HeadingLG style={styles.appName}>RecipeHive</HeadingLG>
+        </View>
+
         {/* Hero Section */}
         <View style={styles.hero}>
           <HeadingXL style={styles.heroTitle}>
@@ -302,6 +313,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: DesignTokens.colors.neutral[50],
+  },
+
+  appHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: DesignTokens.semanticSpacing.md,
+    paddingTop: DesignTokens.semanticSpacing.lg,
+    paddingBottom: DesignTokens.semanticSpacing.md,
+    backgroundColor: DesignTokens.colors.neutral[0],
+    gap: DesignTokens.spacing[3],
+  },
+
+  appLogo: {
+    width: 40,
+    height: 40,
+  },
+
+  appName: {
+    color: DesignTokens.colors.primary[600],
+    fontWeight: '600',
   },
   
   scrollView: {
