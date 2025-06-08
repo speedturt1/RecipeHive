@@ -45,11 +45,17 @@ function setupReplitDatabase() {
   try {
     // Generate Prisma client
     console.log('🔧 Generating Prisma client...');
-    execSync('npx prisma generate', { stdio: 'inherit' });
+    execSync('npx prisma generate', { 
+      stdio: 'inherit',
+      env: { ...process.env, DATABASE_URL: process.env.DATABASE_URL }
+    });
 
     // Push database schema
     console.log('\n📤 Pushing schema to database...');
-    execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' });
+    execSync('npx prisma db push --accept-data-loss', { 
+      stdio: 'inherit',
+      env: { ...process.env, DATABASE_URL: process.env.DATABASE_URL }
+    });
 
     console.log('\n✅ Database setup completed successfully!');
     console.log('\nYour RecipeHive database is ready with:');
