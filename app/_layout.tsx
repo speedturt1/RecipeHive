@@ -32,7 +32,7 @@ const CustomDarkTheme = {
     ...DarkTheme.colors,
     primary: DesignTokens.colors.primary[400],
     background: DesignTokens.colors.neutral[900],
-    card: DarkTheme.colors.neutral[800],
+    card: DesignTokens.colors.neutral[800],
     text: DesignTokens.colors.neutral[100],
     border: DesignTokens.colors.neutral[700],
     notification: DesignTokens.colors.accent[400],
