@@ -49,9 +49,9 @@ export default function RecipeHiveHomepage() {
   const subscriptionService = SubscriptionService.getInstance();
 
   const productSummary = {
-    title: "Your Recipe Collection, Perfected",
-    description: "Transform scattered recipe links, photos, and handwritten cards into one beautifully organized digital cookbook with stunning visuals.",
-    subtitle: "Plus, generate smart shopping lists that organize ingredients by store aisle, making your grocery trips faster and more efficient."
+    title: "From Recipe Chaos to Kitchen Confidence",
+    description: "Transform your scattered recipe collection into an organized, visual cookbook that makes cooking easier and grocery shopping smarter.",
+    subtitle: "Auto-generate shopping lists from multiple recipes that sum and group ingredients by store section – no more wandering aisles."
   };
 
   const keyFeatures = [
