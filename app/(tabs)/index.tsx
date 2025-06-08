@@ -86,6 +86,21 @@ export default function RecipeHiveHomepage() {
     }
   ];
 
+  const comparisonFeatures = [
+    { name: "Browse Public Recipes", free: true, premium: true },
+    { name: "Basic Text Search", free: true, premium: true },
+    { name: "Save Recipes", free: "Up to 10", premium: "Unlimited" },
+    { name: "Recipe Collections", free: "1 Collection", premium: "Unlimited" },
+    { name: "Shopping Lists", free: "1 Active List", premium: "Unlimited" },
+    { name: "Ad-Free Experience", free: false, premium: true },
+    { name: "OCR Recipe Import", free: false, premium: true },
+    { name: "Web Recipe Import", free: false, premium: true },
+    { name: "Advanced Search Filters", free: false, premium: true },
+    { name: "Social Features", free: "View Only", premium: "Full Access" },
+    { name: "Offline Access", free: false, premium: true },
+    { name: "Priority Support", free: false, premium: true },
+  ];
+
   const handleStartTrial = async () => {
     setIsLoading(true);
     try {
@@ -185,6 +200,77 @@ export default function RecipeHiveHomepage() {
                 tier={feature.tier}
               />
             ))}
+          </View>
+        </View>
+
+        {/* Pricing Comparison Table */}
+        <View style={styles.pricingSection}>
+          <View style={styles.pricingSectionHeader}>
+            <HeadingLG style={styles.sectionTitle}>
+              Choose Your Plan
+            </HeadingLG>
+            <BodyLG style={styles.sectionSubtitle} color={600}>
+              Start free and upgrade when you're ready for more powerful features.
+            </BodyLG>
+          </View>
+
+          <View style={styles.comparisonTable}>
+            {/* Table Header */}
+            <View style={styles.tableHeader}>
+              <View style={styles.featureColumn}>
+                <BodyLG style={styles.tableHeaderText}>Features</BodyLG>
+              </View>
+              <View style={styles.planColumn}>
+                <TierBadge tier="free" />
+                <BodyBase style={styles.planPrice}>$0/month</BodyBase>
+              </View>
+              <View style={styles.planColumn}>
+                <TierBadge tier="premium" />
+                <BodyBase style={styles.planPrice}>$4.99/month</BodyBase>
+              </View>
+            </View>
+
+            {/* Table Rows */}
+            {comparisonFeatures.map((feature, index) => (
+              <View key={index} style={[styles.tableRow, index % 2 === 0 && styles.tableRowEven]}>
+                <View style={styles.featureColumn}>
+                  <BodyBase style={styles.featureText}>{feature.name}</BodyBase>
+                </View>
+                <View style={styles.planColumn}>
+                  <BodyBase style={[styles.featureValue, { color: feature.free ? DesignTokens.colors.success[600] : DesignTokens.colors.neutral[400] }]}>
+                    {feature.free === true ? '✓' : feature.free === false ? '✗' : feature.free}
+                  </BodyBase>
+                </View>
+                <View style={styles.planColumn}>
+                  <BodyBase style={[styles.featureValue, { color: feature.premium ? DesignTokens.colors.success[600] : DesignTokens.colors.neutral[400] }]}>
+                    {feature.premium === true ? '✓' : feature.premium === false ? '✗' : feature.premium}
+                  </BodyBase>
+                </View>
+              </View>
+            ))}
+
+            {/* Table CTA */}
+            <View style={styles.tableCta}>
+              <View style={styles.featureColumn} />
+              <View style={styles.planColumn}>
+                <Button
+                  title="Get Started"
+                  onPress={handleGetStartedFree}
+                  variant="secondary"
+                  size="sm"
+                />
+              </View>
+              <View style={styles.planColumn}>
+                <Button
+                  title="Start Trial"
+                  onPress={handleStartTrial}
+                  variant="premium"
+                  size="sm"
+                  loading={isLoading}
+                  disabled={isTrialStarted}
+                />
+              </View>
+            </View>
           </View>
         </View>
 
@@ -360,5 +446,88 @@ const styles = StyleSheet.create({
   finalCtaButtons: {
     width: '100%',
     maxWidth: 300,
+  },
+
+  // Pricing Section Styles
+  pricingSection: {
+    paddingHorizontal: DesignTokens.semanticSpacing.md,
+    paddingVertical: DesignTokens.semanticSpacing['2xl'],
+    backgroundColor: DesignTokens.colors.neutral[0],
+  },
+
+  pricingSectionHeader: {
+    alignItems: 'center',
+    marginBottom: DesignTokens.semanticSpacing.xl,
+  },
+
+  comparisonTable: {
+    backgroundColor: DesignTokens.colors.neutral[0],
+    borderRadius: DesignTokens.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: DesignTokens.colors.neutral[200],
+    overflow: 'hidden',
+  },
+
+  tableHeader: {
+    flexDirection: 'row',
+    backgroundColor: DesignTokens.colors.neutral[50],
+    paddingVertical: DesignTokens.semanticSpacing.md,
+    paddingHorizontal: DesignTokens.semanticSpacing.sm,
+    borderBottomWidth: 2,
+    borderBottomColor: DesignTokens.colors.neutral[200],
+  },
+
+  tableHeaderText: {
+    fontWeight: '600',
+  },
+
+  tableRow: {
+    flexDirection: 'row',
+    paddingVertical: DesignTokens.semanticSpacing.sm,
+    paddingHorizontal: DesignTokens.semanticSpacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: DesignTokens.colors.neutral[100],
+  },
+
+  tableRowEven: {
+    backgroundColor: DesignTokens.colors.neutral[25],
+  },
+
+  featureColumn: {
+    flex: 2,
+    justifyContent: 'center',
+    paddingRight: DesignTokens.spacing[2],
+  },
+
+  planColumn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: DesignTokens.spacing[1],
+  },
+
+  featureText: {
+    fontSize: DesignTokens.typography.fontSize.sm,
+  },
+
+  featureValue: {
+    fontSize: DesignTokens.typography.fontSize.sm,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
+
+  planPrice: {
+    fontSize: DesignTokens.typography.fontSize.xs,
+    color: DesignTokens.colors.neutral[500],
+    textAlign: 'center',
+  },
+
+  tableCta: {
+    flexDirection: 'row',
+    paddingVertical: DesignTokens.semanticSpacing.md,
+    paddingHorizontal: DesignTokens.semanticSpacing.sm,
+    backgroundColor: DesignTokens.colors.neutral[50],
+    borderTopWidth: 2,
+    borderTopColor: DesignTokens.colors.neutral[200],
   },
 });
