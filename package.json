@@ -25,6 +25,8 @@
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.10",
+    "@stripe/stripe-react-native": "^0.47.1",
+    "@tanstack/react-query": "^5.80.6",
     "@types/ioredis": "^4.28.10",
     "@types/redis": "^4.0.10",
     "dotenv": "^16.5.0",
